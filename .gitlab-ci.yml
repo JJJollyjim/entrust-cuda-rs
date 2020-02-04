@@ -1,6 +1,11 @@
-image: 'nvidia/cuda:10.1-devel-ubuntu18.04'
+stages:
+  - build
+  - docker
 
 build:
+  stage: build
+  image: 'nvidia/cuda:10.1-devel-ubuntu18.04'
+
   script:
     - apt-get update && apt-get -y install curl
     - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
@@ -11,3 +16,22 @@ build:
     paths:
       - target/release/entrust-cuda-rs
 
+docker:
+  stage: docker
+  image: docker:19.03.1
+  only:
+    refs: [master]
+  services:
+    - docker:19.03.1-dind
+  variables:
+    # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+    IMAGE_NAME: $DOCKER_REGISTRY_USER/entrust-cuda-rs
+
+  before_script:
+    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD index.docker.io
+  script:
+    - docker build --tag $IMAGE_NAME:$CI_COMMIT_SHA --tag $IMAGE_NAME:latest .
+    - docker push $IMAGE_NAME:$CI_COMMIT_SHA
+    - docker push $IMAGE_NAME:latest
