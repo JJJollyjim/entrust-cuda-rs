@@ -1,0 +1,13 @@
+image: 'nvidia/cuda:10.1-devel-ubuntu18.04'
+
+build:
+  script:
+    - apt-get update && apt-get -y install curl
+    - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    - ~/.cargo/bin/cargo fmt -- --check
+    # TODO test once the nvidia stuff is decoupled
+    - ~/.cargo/bin/cargo build --release
+  artifacts:
+    paths:
+      - target/release/entrust-cuda-rs
+
