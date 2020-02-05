@@ -9,8 +9,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - run: choco install cuda
     - run: cargo fmt -- -l
-    - run: cargo build --verbose
+    - run: cargo build
     - uses: actions/upload-artifact@v1.0.0
       with:
         # Artifact name
