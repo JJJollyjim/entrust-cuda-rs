@@ -8,6 +8,10 @@ fn main() {
     println!(r"cargo:rustc-link-search=/usr/local/cuda-10.1/targets/x86_64-linux/lib");
     println!(r"cargo:rustc-link-search=/usr/local/cuda-10.2/targets/x86_64-linux/lib");
 
+    println!(r"cargo:rustc-link-search=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0");
+    println!(r"cargo:rustc-link-search=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.1");
+    println!(r"cargo:rustc-link-search=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2");
+
     let src_dir: PathBuf = "src/backend/cuda/kernel".parse().unwrap();
 
     let mut ptx_file: PathBuf = env::var("OUT_DIR").unwrap().parse().unwrap();
