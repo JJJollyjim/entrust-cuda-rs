@@ -1,0 +1,19 @@
+name: Rust
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - run: cargo fmt -- -l
+    - run: cargo build --verbose
+    - uses: actions/upload-artifact@v1.0.0
+      with:
+        # Artifact name
+        name: Windows Binary
+        # Directory containing files to upload
+        path: target/release/entrust-cuda-rs.exe
